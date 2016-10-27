@@ -2,22 +2,17 @@
 - name: Install nginx
   apt: name=nginx state=latest
 
-- name: Delete sites-avaiable
-- shell: rm -f /etc/nginx/sites-available/*
-  args:
-    executable: /bin/bash
+#- name: Delete sites-avaiable
+- file: dest=/etc/nginx/sites-available/default state=absent
 
-- name: Delete sites-enabled
-- shell: rm -f /etc/nginx/sites-enabled/*
-  args:
-    executable: /bin/bash
+#- name: Delete sites enabled
+- file: dest=/etc/nginx/sites-enabled/default state=absent
 
 - name: Copy nginx configuration for wordpress
-  template: src=default.conf dest=/etc/nginx/sites-available/default.conf
+  template: src=default.conf dest=/etc/nginx/sites-available/default.conf 
   notify: restart nginx
 
 
-- name: Create link between sites
-- shell: ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
-  args:
-    executable: /bin/bash
+- file: src=/etc/nginx/sites-available/default.conf dest=/etc/nginx/sites-enabled/default.conf state=link
+  
+
